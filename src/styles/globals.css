@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.modalArea {
+  width: clamp(300px, 100%, 500px);
+}
+
+.ui-button {
+  @apply rounded bg-slate-800 px-2 py-1 text-sm text-white;
+}
+
+.red-ui-button {
+  @apply rounded bg-red-700 px-2 py-1 text-sm text-white;
+}
