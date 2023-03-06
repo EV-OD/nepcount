@@ -76,10 +76,20 @@ export const itemRouter = createTRPCRouter({
         input.finished
       );
     }),
-  getField: protectedProcedure.query(async ({ ctx }): Promise<any[]> => {
-    return await await ctx.prisma
-      .$queryRaw`SELECT COLUMN_NAME,TABLE_NAME,table_schema from INFORMATION_SCHEMA.columns
+  getField: protectedProcedure.query(
+    async ({
+      ctx,
+    }): Promise<
+      {
+        COLUMN_NAME: string;
+        TABLE_NAME: string;
+        table_schema: string;
+      }[]
+    > => {
+      return await ctx.prisma
+        .$queryRaw`SELECT COLUMN_NAME,TABLE_NAME,table_schema from INFORMATION_SCHEMA.columns
       where table_name = "item" and table_schema="nepcount"
       ;`;
-  }),
+    }
+  ),
 });

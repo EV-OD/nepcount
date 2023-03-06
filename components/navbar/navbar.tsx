@@ -1,5 +1,6 @@
 import { useSession, signOut, signIn } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Navbar = () => {
     const { data: session } = useSession();
@@ -7,9 +8,9 @@ const Navbar = () => {
     return (
         <nav className="flex justify-between items-center h-16 bg-gradient-to-r from-purple-500 to-indigo-500 text-white relative shadow-sm font-mono" role="navigation">
             <div className="pl-8">
-                <a href="/" className="text-2xl font-bold">
+                <Link href="/" className="text-2xl font-bold">
                     MyLogo
-                </a>
+                </Link>
             </div>
             <div className="px-4 cursor-pointer md:hidden">
                 <svg
@@ -31,7 +32,9 @@ const Navbar = () => {
                 {session && (
                     <>
                         <button
-                            onClick={() => signOut()}
+                            onClick={() => {
+                                signOut().then(() => { console.log(1) }).catch(() => { console.log(1) })
+                            }}
                             className="px-2 bg-indigo-700 hover:bg-indigo-800 rounded-md"
                         >
                             Logout
@@ -46,7 +49,9 @@ const Navbar = () => {
                     </>
                 )}
                 {!session && (
-                    <button onClick={() => signIn("google")} className="p-4 hover:text-gray-400">
+                    <button onClick={() => {
+                        signIn("google").then(() => { console.log(1) }).catch(() => { console.log(1) })
+                    }} className="p-4 hover:text-gray-400">
                         Login
                     </button>
                 )}

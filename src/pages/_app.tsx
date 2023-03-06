@@ -11,20 +11,31 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: React.ReactElement) => React.ReactNode
 }
 
-type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout
-}
+type AppPropsWithLayout<P> = AppProps<P> & {
+  Component: NextPageWithLayout<P>;
+};
+
+// const MyApp: AppType<{ session: Session | null }> = ({
+//   Component,
+//   pageProps: { session, ...pageProps },
+// }: AppPropsWithLayout) => {
+//   const getLayout = Component.getLayout ?? ((page) => page)
+//   return (
+//     <SessionProvider session={session}>
+//       {getLayout(<Component {...pageProps} />)}
+//     </SessionProvider>
+//   );
+// };
 
 import "~/styles/globals.css";
 
-const MyApp: AppType<{ session: Session | null }> = ({
+const MyApp = ({
   Component,
-  pageProps: { session, ...pageProps },
-}: AppPropsWithLayout) => {
+  pageProps
+}: AppPropsWithLayout<{ session: Session }>) => {
   const getLayout = Component.getLayout ?? ((page) => page)
-
   return (
-    <SessionProvider session={session}>
+    <SessionProvider session={pageProps.session}>
       {getLayout(<Component {...pageProps} />)}
     </SessionProvider>
   );

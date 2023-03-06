@@ -13,7 +13,7 @@ import { NextPageWithLayout } from './_app'
 
 const Sales: NextPageWithLayout = () => {
     const { data: salesData } = api.sales.getTodayAll.useQuery()
-    let utils = api.useContext()
+    const utils = api.useContext()
     const searchMutation = api.items.searchItem.useMutation()
     const searchInputRef = useRef<HTMLInputElement>(null)
 
@@ -24,7 +24,7 @@ const Sales: NextPageWithLayout = () => {
     const currentItem = useRef<Item | null>(null)
     const [isAutoComplete, setIsAutoComplete] = useState(false)
     const addMutation = api.sales.addItem.useMutation()
-    const handleSearch = async () => {
+    const handleSearch = () => {
         if (searchInputRef.current?.value != "") {
             setIsAutoComplete(false)
         }
@@ -41,7 +41,7 @@ const Sales: NextPageWithLayout = () => {
         }
 
     }
-    const keyPressed = async (e: KeyboardEvent) => {
+    const keyPressed = (e: KeyboardEvent) => {
         if (searchInputRef.current?.value === "") {
             setIsAutoComplete(false)
             if (soldPriceRef.current) {
@@ -53,7 +53,7 @@ const Sales: NextPageWithLayout = () => {
             setActive(0)
         }
         if (searchMutation.data) {
-            let maxIndex = searchMutation.data?.length - 1
+            const maxIndex = searchMutation.data?.length - 1
 
             if (e.code === "ArrowDown") {
                 if (maxIndex !== active) {
@@ -70,7 +70,7 @@ const Sales: NextPageWithLayout = () => {
             }
             if (e.code === "Enter") {
                 if (searchInputRef.current) {
-                    let item = searchMutation.data.filter(item => item.id === currentItem.current?.id)
+                    const item = searchMutation.data.filter(item => item.id === currentItem.current?.id)
                     if (item && item.length > 0) {
                         searchInputRef.current.value = item[0]?.name as string
                         setSoldPrice()
@@ -82,8 +82,8 @@ const Sales: NextPageWithLayout = () => {
     }
 
     const setSoldPrice = () => {
-        if (soldPriceRef.current) {
-            soldPriceRef.current.value = `${currentItem.current?.sellingprice}`
+        if (soldPriceRef.current && currentItem.current?.sellingprice) {
+            soldPriceRef.current.value = `${currentItem.current.sellingprice}`
         }
     }
 
@@ -91,8 +91,8 @@ const Sales: NextPageWithLayout = () => {
         const todayISOString = new Date().toISOString();
         if (currentItem.current) {
             addMutation.mutate({ date: todayISOString, itemid: currentItem.current.id, quantity: Number(quantityRef.current?.value), soldPrice: Number(soldPriceRef.current?.value) }, {
-                onSuccess() {
-                    utils.sales.invalidate()
+                onSuccess: () => {
+                    utils.sales.invalidate().then(() => { console.log(1) }).catch(() => { console.log(1) })
                 }
             })
         }
@@ -122,12 +122,12 @@ const Sales: NextPageWithLayout = () => {
                             {isAutoComplete &&
                                 <div className="absolute top-[70px] w-full box bg-slate-300 text-black flex flex-col">
                                     {searchMutation.data && searchMutation.data.map((item, i) => {
-                                        let classT: string = ""
+                                        let classT = ""
                                         if (i == active) {
                                             currentItem.current = item
                                             classT = 'bg-blue-500 text-white'
                                         }
-                                        return <p className={classT + " px-2 py-1"}>{item.name}</p>
+                                        return <p key={i} className={classT + " px-2 py-1"}>{item.name}</p>
                                     })}
                                 </div>
                             }
@@ -144,8 +144,8 @@ const Sales: NextPageWithLayout = () => {
                 </Modal>
             </div>
             <div>
-                {salesData && salesData?.map(solditem => {
-                    return <h1 className='bg-white'>{solditem.items.name}</h1>
+                {salesData && salesData?.map((solditem, i) => {
+                    return <h1 key={i} className='bg-white'>{solditem.items.name}</h1>
                 })}
             </div>
         </>

@@ -15,7 +15,7 @@ function ItemSelector({ items, isLoading }: ItemSelectorPropsType) {
             {isLoading && <p>Loading</p>}
             <form>
                 {
-                    data?.map((item: any, i: number) => {
+                    data?.map((item, i: number) => {
                         return <CheckBox item={item} i={i} key={i} />
                     })
                 }
@@ -27,11 +27,20 @@ function ItemSelector({ items, isLoading }: ItemSelectorPropsType) {
 
 export default ItemSelector
 
-function CheckBox(item: any, i: number) {
+type CheckBoxType = {
+    item: {
+        COLUMN_NAME: string;
+        TABLE_NAME: string;
+        table_schema: string;
+    },
+    i: number
+}
+
+function CheckBox({ item, i }: CheckBoxType) {
     const [isChecked, setIsChecked] = useState(true)
-    let id = `${item.item.COLUMN_NAME}${i}`
+    const id = `${item.COLUMN_NAME}${i}`
     return <div className='flex gap-3'>
         <input type="checkbox" className='w-4' key={id} checked={isChecked} id={id} name={id} value={item.COLUMN_NAME} onChange={() => setIsChecked(c => !c)} />
-        <label htmlFor={id} className='text-xl relative -top-[1px] capitalize cursor-pointer select-none'>{item.item.COLUMN_NAME}</label>
+        <label htmlFor={id} className='text-xl relative -top-[1px] capitalize cursor-pointer select-none'>{item.COLUMN_NAME}</label>
     </div >
 }

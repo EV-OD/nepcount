@@ -21,9 +21,9 @@ const Tab: NextPageWithLayout = () => {
     return (
         <div className='flex'>
             <div className="tabArea mt-0 flex gap-1 bg-slate-400 pl-2 w-full">
-                {tabs.map(tab => {
+                {tabs.map((tab, i) => {
                     return (
-                        <Link href={tab.path} className={'bg-white px-4 hover:bg-slate-300 py-3 text-sm font-semibold' + " " + (router.pathname === tab.path ? "border-b-4 border-slate-700 bg-slate-200" : "")}>{tab.name}</Link>
+                        <Link key={i} href={tab.path} className={'bg-white px-4 hover:bg-slate-300 py-3 text-sm font-semibold' + " " + (router.pathname === tab.path ? "border-b-4 border-slate-700 bg-slate-200" : "")}>{tab.name}</Link>
                     )
                 })}
             </div>

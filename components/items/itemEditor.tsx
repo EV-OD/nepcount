@@ -25,7 +25,7 @@ function ItemEditor() {
         async onSuccess() {
             await utils.items.invalidate()
             if (searchinputRef.current?.value != "") {
-                await searchMutation.mutate({ keyword: searchinputRef.current?.value as string })
+                searchMutation.mutate({ keyword: searchinputRef.current?.value as string })
 
             }
         }
@@ -61,8 +61,16 @@ function ItemEditor() {
         <>
             <div className="items-center text-white text-xl gap-4">
                 <Modal isOpen={isOpen} buttons={<div className='flex gap-3 justify-end w-full'>
-                    <button type='button' className="bg-slate-300 px-4 py-3" onClick={() => handleFormSubmit()}>Add</button>
-                    <button type="button" className="bg-slate-300 px-4 py-3" onClick={() => setIsOpen(false)}>Cancel</button>
+                    <button type='button' className="bg-slate-300 px-4 py-3" onClick={() => {
+                        handleFormSubmit().then(() => {
+                            // Do something after the Promise resolves
+                        }).catch((error) => {
+                            // Handle any errors that occur
+                        });
+                    }}>Add</button>
+                    <button type="button" className="bg-slate-300 px-4 py-3" onClick={() => {
+                        setIsOpen(false)
+                    }}>Cancel</button>
                 </div>}>
                     <form className="text-black flex w-full flex-col gap-3">
                         <input
