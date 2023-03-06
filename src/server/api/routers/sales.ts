@@ -13,11 +13,11 @@ import { getStartAndEndOfToday } from "~/utils/time";
 export const salesRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.soldItem.findMany({
-      where:{
-        items:{
-          userId: ctx.prisma.user.
-        }
-      }
+      where: {
+        items: {
+          userId: ctx.session.user.id,
+        },
+      },
       include: {
         items: true,
       },
